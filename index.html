@@ -1,373 +1,312 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>화이트데이 데이트?</title>
-  <style>
-    :root {
-      --btn-w: 160px;
-      --btn-h: 56px;
-      --card-w: 680px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>💌</title>
 
-    * { box-sizing: border-box; }
-    body{
-      margin:0;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-      background:#fff;
-      overflow:hidden;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
 
-    .wrap{
-      width:min(var(--card-w), 92vw);
-      padding:28px 22px;
-      border:1px solid #eee;
-      border-radius:18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.06);
-      text-align:center;
-      background: #fff;
-      position: relative;
-      z-index: 2;
-    }
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+button { -webkit-appearance: none; appearance: none; font: inherit; }
 
-    h1{
-      font-size: 22px;
-      margin:0 0 10px;
-      line-height:1.35;
-    }
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #89CFF0 0%, #5B9BD5 40%, #A7D8F0 100%);
+  font-family: 'Gaegu', cursive, system-ui, sans-serif;
+  transition: background 0.6s ease;
+}
 
-    p{
-      margin:0 0 18px;
-      color:#444;
-      line-height:1.5;
-    }
+/* 배경 반짝이 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,0.5) 50%, transparent 50%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.5) 50%, transparent 50%),
+    radial-gradient(1px 1px at 70% 45%, rgba(255,255,255,0.3) 50%, transparent 50%),
+    radial-gradient(2px 2px at 85% 75%, rgba(255,255,255,0.4) 50%, transparent 50%),
+    radial-gradient(1px 1px at 45% 80%, rgba(255,255,255,0.3) 50%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
 
-    .stage{
-      position: relative;
-      height: 240px;
-      border-radius: 14px;
-      border: 1px dashed #e7e7e7;
-      background: #fafafa;
-      overflow: hidden;
-      touch-action: none; /* 모바일 제스처 간섭 최소화 */
-    }
+@keyframes twinkle {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
 
-    button{
-      width: var(--btn-w);
-      height: var(--btn-h);
-      border:0;
-      border-radius: 14px;
-      font-size: 18px;
-      cursor: pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-    }
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 40px 32px 36px;
+  text-align: center;
+  box-shadow:
+    0 8px 32px rgba(91, 155, 213, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+  position: relative;
+  z-index: 10;
+  animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 
-    #yes{
-      position:absolute;
-      left: 18%;
-      top: 42%;
-      background:#ff3b82;
-      color:white;
-      box-shadow: 0 10px 20px rgba(255,59,130,.25);
-    }
+@keyframes cardIn {
+  0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
 
-    #no{
-      position:absolute;
-      left: 58%;
-      top: 42%;
-      background:#111;
-      color:white;
-      will-change: left, top, transform;
-      transition: transform 120ms ease;
-    }
+.emoji-top {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+  animation: bounce 2s ease-in-out infinite;
+}
 
-    .hint{
-      margin-top:10px;
-      font-size:13px;
-      color:#666;
-    }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
 
-    /* ✅ Yes 누르면 페이지 전환 */
-    .screen{
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      background: #fff;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 320ms ease;
-      z-index: 3;
-    }
-    .screen.on{
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .screen .msg{
-      width:min(720px, 92vw);
-      padding: 28px 22px;
-      border:1px solid #eee;
-      border-radius:18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.06);
-      text-align:center;
-      background:#fff;
-    }
-    .screen h2{
-      margin:0 0 10px;
-      font-size: 22px;
-      color:#ff3b82;
-    }
-    .screen p{
-      margin:0;
-      color:#333;
-      font-size:16px;
-    }
+h1 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.7;
+  margin: 0 0 28px;
+  color: #2c3e50;
+  word-break: keep-all;
+}
 
-    /* ✅ 폭죽 캔버스 */
-    canvas#fx{
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-    }
-  </style>
+.btn-container {
+  position: relative;
+  width: 280px;
+  height: 60px;
+  margin: 0 auto;
+  touch-action: manipulation;
+}
+
+.btn {
+  position: absolute;
+  top: 0;
+  width: 124px;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  z-index: 20;
+  pointer-events: auto;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  letter-spacing: 0.5px;
+}
+
+.btn:active { transform: scale(0.96); }
+
+.yes {
+  left: 0;
+  background: linear-gradient(135deg, #5B9BD5, #3A7BD5);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(58, 123, 213, 0.35);
+}
+.yes:hover {
+  box-shadow: 0 6px 20px rgba(58, 123, 213, 0.45);
+  transform: translateY(-1px);
+}
+
+.no {
+  left: 156px;
+  background: #e0e6ed;
+  color: #555;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.result {
+  margin-top: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #3A7BD5;
+  display: none;
+  animation: resultIn 0.5s ease both;
+}
+
+@keyframes resultIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.star {
+  position: fixed;
+  pointer-events: none;
+  font-size: 24px;
+  animation: floatUp 2.5s ease-out forwards;
+  z-index: 5;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-350px) rotate(180deg) scale(0.5); opacity: 0; }
+}
+
+body.accepted {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #89CFF0 100%);
+}
+</style>
 </head>
 
 <body>
-  <canvas id="fx"></canvas>
+  <div class="card">
+    <span class="emoji-top">💌</span>
+    <h1>
+      <!-- ✏️ 여기에 질문 문구를 수정하세요 -->
+      큰아들인 강병민은 19일에 찾아뵙고자 합니다 . 방문하여도 괜찮겠습니까 ?
+    </h1>
 
-  <div class="wrap" id="mainCard">
-    <!-- ✏️ [문구 수정 위치 1] 아래 제목/문장만 바꾸면 됨 -->
-    <h1><!-- TODO: 제목 수정 -->발렌타인데이에는 못 만났지만<br/>화이트데이에 같이 데이트 할래?</h1>
-    <p><!-- TODO: 설명 수정 -->Yes / No 중에 골라줘 🙂</p>
-
-    <div class="stage" id="stage">
-      <button id="yes" type="button">Yes</button>
-      <button id="no" type="button">No</button>
+    <div class="btn-container" id="btnArea">
+      <button class="btn yes" id="yesBtn" type="button">Yes</button>
+      <button class="btn no" id="noBtn" type="button">No</button>
     </div>
 
-    <div class="hint"><!-- TODO: 힌트 수정(원하면) -->No는… 선택 불가 😎</div>
-  </div>
-
-  <!-- ✅ Yes 누르면 전환되는 화면 -->
-  <div class="screen" id="successScreen" aria-hidden="true">
-    <div class="msg">
-      <!-- ✏️ [문구 수정 위치 2] Yes 성공 시 제목/문장 -->
-      <h2><!-- TODO: 성공 제목 수정 -->❤️ 우리 화이트데이 데이트 확정 ❤️</h2>
-      <p><!-- TODO: 성공 설명 수정 -->날짜/시간/장소는 연락으로 정하자 🙂</p>
+    <div class="result" id="result">
+      <!-- ✏️ 여기에 결과 메시지를 수정하세요 -->
+      ⭐ 허락해 주셔서 감사합니다 : ) ⭐
     </div>
   </div>
 
-  <script>
-    const stage = document.getElementById("stage");
-    const yes = document.getElementById("yes");
-    const no = document.getElementById("no");
-    const successScreen = document.getElementById("successScreen");
+<script>
+(function () {
+  const yesBtn  = document.getElementById("yesBtn");
+  const noBtn   = document.getElementById("noBtn");
+  const btnArea = document.getElementById("btnArea");
+  const result  = document.getElementById("result");
 
-    // ====== No 버튼 "절대 클릭 불가" 구현 ======
+  if (!yesBtn || !noBtn || !btnArea) return;
 
-    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+  yesBtn.addEventListener("click", () => {
+    document.body.classList.add("accepted");
+    if (result) result.style.display = "block";
+    createStars();
+  });
 
-    function getPosInStage(evt){
-      const s = stage.getBoundingClientRect();
-      const e = evt.touches?.[0] ?? evt.changedTouches?.[0] ?? evt;
-      return { x: e.clientX - s.left, y: e.clientY - s.top };
+  function createStars() {
+    const emojis = ["⭐", "🌟", "✨"];
+    for (let i = 0; i < 25; i++) {
+      const s = document.createElement("div");
+      s.className = "star";
+      s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      s.style.left = Math.random() * window.innerWidth + "px";
+      s.style.top = window.innerHeight + "px";
+      s.style.fontSize = (18 + Math.random() * 16) + "px";
+      s.style.animationDelay = (Math.random() * 0.8) + "s";
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 3300);
     }
+  }
 
-    function placeNoRandom(){
-      const s = stage.getBoundingClientRect();
-      const b = no.getBoundingClientRect();
-      const pad = 10;
-      const left = Math.random() * (s.width  - b.width  - pad*2) + pad;
-      const top  = Math.random() * (s.height - b.height - pad*2) + pad;
-      no.style.left = left + "px";
-      no.style.top  = top  + "px";
+  let escaped = false;
+
+  /* 접속할 때마다 랜덤으로 모드 선택 */
+  const MODE = Math.random() < 0.5 ? "teleport" : "magnet";
+
+  function escapeToBody() {
+    if (!escaped) {
+      escaped = true;
+      document.body.appendChild(noBtn);
+      noBtn.style.position = "fixed";
+      noBtn.style.zIndex = "9999";
+      if (MODE === "magnet") noBtn.style.transition = "left 0.25s ease-out, top 0.25s ease-out";
     }
+  }
 
-    // 도망 로직: 포인터 위치를 기준으로 "반대 방향"으로 이동 + 클램프
-    function runAwayFrom(x, y){
-      const s = stage.getBoundingClientRect();
-      const b = no.getBoundingClientRect();
-      const pad = 10;
+  /* ── 모드 1: 랜덤 순간이동 ── */
+  function teleport() {
+    escapeToBody();
+    const w = noBtn.offsetWidth || 124;
+    const h = noBtn.offsetHeight || 50;
+    const pad = 12;
+    noBtn.style.transition = "none";
+    noBtn.style.left = Math.max(pad, Math.random() * (window.innerWidth - w - pad)) + "px";
+    noBtn.style.top  = Math.max(pad, Math.random() * (window.innerHeight - h - pad)) + "px";
+  }
 
-      const btnW = b.width, btnH = b.height;
-      const curLeft = (b.left - s.left);
-      const curTop  = (b.top  - s.top);
+  /* ── 모드 2: 자석 반발 (N극-N극) ── */
+  function magnetRepel(mouseX, mouseY) {
+    escapeToBody();
+    const rect = noBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
 
-      const noCx = curLeft + btnW/2;
-      const noCy = curTop  + btnH/2;
+    /* 마우스 → 버튼 방향 벡터 */
+    let dx = cx - mouseX;
+    let dy = cy - mouseY;
+    const dist = Math.hypot(dx, dy) || 1;
 
-      let dx = noCx - x;
-      let dy = noCy - y;
+    /* 가까울수록 세게 밀림 */
+    const force = Math.max(120, 300 - dist * 1.5);
+    dx = (dx / dist) * force;
+    dy = (dy / dist) * force;
 
-      // 0벡터 방지
-      const len0 = Math.hypot(dx, dy);
-      if (len0 < 0.5){
-        dx = (Math.random() - 0.5);
-        dy = (Math.random() - 0.5);
-      }
+    const w = noBtn.offsetWidth || 124;
+    const h = noBtn.offsetHeight || 50;
+    const pad = 12;
+    let newX = cx + dx - w / 2;
+    let newY = cy + dy - h / 2;
 
-      // normalize
-      const len = Math.hypot(dx, dy);
-      dx /= len; dy /= len;
+    /* 화면 밖으로 안 나가게 */
+    newX = Math.max(pad, Math.min(newX, window.innerWidth - w - pad));
+    newY = Math.max(pad, Math.min(newY, window.innerHeight - h - pad));
 
-      // ✅ 모바일에서 "찍는 순간"도 못 누르게: 충분히 크게 점프
-      const dist = clamp(Math.min(s.width, s.height) * 0.55, 160, 280);
+    noBtn.style.transition = "left 0.25s ease-out, top 0.25s ease-out";
+    noBtn.style.left = newX + "px";
+    noBtn.style.top  = newY + "px";
+  }
 
-      let newLeft = curLeft + dx * dist + (Math.random()-0.5)*50;
-      let newTop  = curTop  + dy * dist + (Math.random()-0.5)*35;
-
-      newLeft = clamp(newLeft, pad, s.width  - btnW - pad);
-      newTop  = clamp(newTop,  pad, s.height - btnH - pad);
-
-      // 혹시 같은 위치 근처로 다시 가는 걸 방지: 너무 가까우면 재배치
-      if (Math.hypot(newLeft - curLeft, newTop - curTop) < 40){
-        newLeft = Math.random() * (s.width  - btnW - pad*2) + pad;
-        newTop  = Math.random() * (s.height - btnH - pad*2) + pad;
-      }
-
-      no.style.left = newLeft + "px";
-      no.style.top  = newTop  + "px";
-
-      no.style.transform = "scale(1.08)";
-      setTimeout(() => no.style.transform = "scale(1)", 120);
+  /* ── 공통: 근접 감지 (PC) ── */
+  const PROXIMITY = 80;
+  document.addEventListener("mousemove", (e) => {
+    const rect = noBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+    if (dist < PROXIMITY) {
+      if (MODE === "teleport") teleport();
+      else magnetRepel(e.clientX, e.clientY);
     }
+  });
 
-    // ✅ 1) 가까워지면 도망 (PC: mousemove, 모바일: touchmove)
-    const TRIGGER_RADIUS = 120; // 필요하면 여기만 조절
-    function maybeRunAway(evt){
-      const { x, y } = getPosInStage(evt);
-      const s = stage.getBoundingClientRect();
-      const b = no.getBoundingClientRect();
-      const cx = (b.left - s.left) + b.width/2;
-      const cy = (b.top  - s.top ) + b.height/2;
-      if (Math.hypot(x - cx, y - cy) < TRIGGER_RADIUS){
-        runAwayFrom(x, y);
-      }
-    }
-    stage.addEventListener("mousemove", maybeRunAway);
-    stage.addEventListener("touchmove", maybeRunAway, { passive: true });
+  noBtn.addEventListener("mouseenter", () => {
+    if (MODE === "teleport") teleport();
+  });
 
-    // ✅ 2) 올리기만 해도(hover) 도망
-    no.addEventListener("mouseenter", (evt) => {
-      const { x, y } = getPosInStage(evt);
-      runAwayFrom(x, y);
-    });
+  noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    const t = e.touches[0];
+    if (MODE === "teleport") teleport();
+    else magnetRepel(t.clientX, t.clientY);
+  }, { passive: false });
 
-    // ✅ 3) 모바일 포함: "누르는 순간(pointerdown)"에 무조건 도망 + 이벤트 차단
-    // 캡처 단계(true)로 먼저 잡아버려서 클릭이 절대 성립 못 하게 함
-    no.addEventListener("pointerdown", (evt) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      const { x, y } = getPosInStage(evt);
-      runAwayFrom(x, y);
-    }, true);
-
-    // ✅ 4) 혹시라도 click이 발생하면(이론상 거의 불가) 완전 차단
-    no.addEventListener("click", (evt) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      evt.stopImmediatePropagation();
-      // 즉시 다른 곳으로 이동
-      const s = stage.getBoundingClientRect();
-      runAwayFrom(Math.random()*s.width, Math.random()*s.height);
-      return false;
-    }, true);
-
-    // 초기 배치(렌더 후)
-    setTimeout(placeNoRandom, 0);
-    window.addEventListener("resize", () => setTimeout(placeNoRandom, 0));
-
-    // ====== Yes: 폭죽 + 화면 전환 ======
-
-    // 간단 파티클 폭죽 (외부 라이브러리 없이)
-    const canvas = document.getElementById("fx");
-    const ctx = canvas.getContext("2d");
-
-    function resizeCanvas(){
-      canvas.width = window.innerWidth * devicePixelRatio;
-      canvas.height = window.innerHeight * devicePixelRatio;
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-    }
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    let particles = [];
-    let fxRunning = false;
-
-    function spawnBurst(x, y){
-      const n = 120;
-      for (let i=0; i<n; i++){
-        const a = Math.random() * Math.PI * 2;
-        const sp = 2 + Math.random() * 6;
-        particles.push({
-          x, y,
-          vx: Math.cos(a)*sp,
-          vy: Math.sin(a)*sp,
-          life: 60 + Math.random()*40,
-          r: 2 + Math.random()*2.5,
-          // 색 지정은 안 해도 되지만, 폭죽은 색이 있어야 느낌이 살아서 랜덤 HSL 사용
-          hue: Math.floor(Math.random()*360)
-        });
-      }
-    }
-
-    function stepFx(){
-      if (!fxRunning) return;
-
-      ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
-
-      particles = particles.filter(p => p.life > 0);
-      for (const p of particles){
-        p.life -= 1;
-        p.vy += 0.05;            // 중력
-        p.vx *= 0.99;            // 공기저항
-        p.vy *= 0.99;
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        const alpha = Math.max(0, Math.min(1, p.life / 90));
-        ctx.beginPath();
-        ctx.fillStyle = `hsla(${p.hue}, 95%, 55%, ${alpha})`;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        ctx.fill();
-      }
-
-      requestAnimationFrame(stepFx);
-    }
-
-    function startFireworks(){
-      fxRunning = true;
-      particles = [];
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-
-      // 중앙 + 랜덤 위치로 몇 번 연속 터트리기
-      spawnBurst(cx, cy);
-      setTimeout(() => spawnBurst(cx - 120, cy - 40), 200);
-      setTimeout(() => spawnBurst(cx + 140, cy - 30), 420);
-      setTimeout(() => spawnBurst(cx, cy + 60), 650);
-
-      stepFx();
-
-      // 3초 후 자동 종료(원하면 늘려도 됨)
-      setTimeout(() => { fxRunning = false; particles = []; ctx.clearRect(0,0,window.innerWidth, window.innerHeight); }, 3200);
-    }
-
-    yes.addEventListener("click", () => {
-      startFireworks();
-      // 화면 전환
-      successScreen.classList.add("on");
-      successScreen.setAttribute("aria-hidden", "false");
-    });
-  </script>
+  noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (MODE === "teleport") teleport();
+    else magnetRepel(e.clientX, e.clientY);
+  });
+})();
+</script>
 </body>
 </html>
